@@ -26,11 +26,10 @@
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
         }
         .indicator {
-            display: flex;
-            justify-content: center;
-            align-items: center;
             height: 50px;
             width: 50px;
             border-radius: 50%;
@@ -45,14 +44,16 @@
         .red {
             background-color: red;
         }
+        .blue {  /* Adicionando a cor azul */
+            background-color: blue;
+        }
         .status {
             font-size: 18px;
             font-weight: bold;
         }
         .model-title {
-            text-align: center;
             font-size: 24px;
-            margin-bottom: 20px;
+            flex-grow: 1;
         }
         .graph-container {
             text-align: center;
@@ -61,8 +62,39 @@
             font-size: 18px;
             font-weight: bold;
             margin-top: 20px;
+            text-align: center;
         }
     </style>
+
+    <script>
+        function atualizarDados() {
+            fetch('/data')
+                .then(response => response.json())
+                .then(data => {
+                    // Atualiza os status dos modelos
+                    document.getElementById("resultado_knn").innerText = "Status: " + data.resultado_knn;
+                    document.getElementById("resultado_rf").innerText = "Status: " + data.resultado_rf;
+                    document.getElementById("falha_detectada").innerText = data.falha_detectada;
+
+                    // Atualiza as cores dos indicadores
+                    let knnIndicator = document.getElementById("knn_indicator");
+                    let rfIndicator = document.getElementById("rf_indicator");
+
+                    knnIndicator.className = "indicator " + data.knn_color;
+                    rfIndicator.className = "indicator " + data.rf_color;
+
+                    // Atualiza o gráfico FFT
+                    if (data.graph_img) {
+                        document.getElementById("fft_chart").src = "data:image/png;base64," + data.graph_img;
+                    }
+                })
+                .catch(error => console.error('Erro ao buscar dados:', error));
+        }
+
+        // Atualiza a cada 3 segundos
+        setInterval(atualizarDados, 3000);
+        window.onload = atualizarDados; // Atualiza ao carregar a página
+    </script>
 </head>
 <body>
 
@@ -72,25 +104,25 @@
     <!-- Modelo KNN -->
     <div class="card">
         <div class="model-title">Modelo KNN</div>
-        <div class="indicator {{ knn_color }}"></div>
-        <div class="status">Status: {{ resultado_knn }}</div>
+        <div id="knn_indicator" class="indicator {{ knn_color }}"></div>
+        <div id="resultado_knn" class="status">Status: {{ resultado_knn }}</div>
     </div>
 
     <!-- Modelo RF -->
     <div class="card">
         <div class="model-title">Modelo RF</div>
-        <div class="indicator {{ rf_color }}"></div>
-        <div class="status">Status: {{ resultado_rf }}</div>
+        <div id="rf_indicator" class="indicator {{ rf_color }}"></div>
+        <div id="resultado_rf" class="status">Status: {{ resultado_rf }}</div>
     </div>
 
     <!-- Falha Detectada -->
     <div class="falha-alert">
-        <p>{{ falha_detectada }}</p>
+        <p id="falha_detectada">{{ falha_detectada }}</p>
     </div>
 
     <!-- Gráfico FFT -->
     <div class="graph-container">
-        <img src="data:image/png;base64,{{ graph_img }}" alt="Gráfico FFT">
+        <img id="fft_chart" src="data:image/png;base64,{{ graph_img }}" alt="Gráfico FFT">
     </div>
 </div>
 
