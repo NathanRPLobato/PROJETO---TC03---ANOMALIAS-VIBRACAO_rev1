@@ -24,8 +24,9 @@ Este projeto realiza o monitoramento de anomalias utilizando um **ESP32** com o 
 │   │   │── 📜 index.html      # Parte Visual da Aplicação WEB
 │── 📂 Instance         # Dados da Aplicação Nessa Pasta
 │   │── 📂 datasets        # Dados para Treinamento
-│   │── 📂 raw        # Dados crus vindos do ESP e salvos em CSV
-│   │── 📂 refined        # Dados processados e prontos para passarem pelos modelos de KNN e RF
+│   │── 📂 raw        # Dados crus vindos do ESP e salvos em CSV e SQLITE
+│   │── 📂 refined        # Dados processados SQLITE prontos para passarem pelos modelos de KNN e RF
+│   │   │── 📜 criar_BD.py    # Cria o Bando de Dados Sqlite do Projeto
 │── 📜 main.py              # Arquivo principal da API
 │── 📜 requirements.txt     # Dependências do projeto
 │── 📜 README.md            # Documentação
@@ -36,12 +37,23 @@ Este projeto realiza o monitoramento de anomalias utilizando um **ESP32** com o 
 
 ---
 
+
+## Como Executar 
+
+### Instalar os Requirements.txt
+```bash
+pip install -r requirements.txt
+```
+
 ## Treinamento dos Modelos  
 ```bash   
 python API_DETECTAR_ANOMALIA/models/knn_rf_treino.py                                                                                    
 ```
 
-## Como Executar 
+### Criar BDlocal
+```bash
+python API_DETECTAR_ANOMALIA\instance\criar_BD.py
+```
 
 ### Iniciar API
 ```bash
@@ -167,11 +179,12 @@ O ESP32 coleta os dados do acelerômetro **MPU6050 (HW-123)** e envia para a API
 # Parte Eletrônica do Projeto Utilizando ESP32
 
 ## Lista de Componentes
-
+ 
 - ESP32 - Microcontrolador principal
 - HW-123 - Sensor de aceleração e giroscópio
 - Jumpers (macho-macho, macho-fêmea) - Para conexões
-- Fonte de Alimentação 9V (ou via USB)
+- Bateria 9V (ou via USB)
+- LM7805 - Regulador de Tensão para Manter a Alimentação da Placa estabilizada em 5V
 
 ## Conexão do ESP32 com o HW-123  
 
@@ -190,5 +203,10 @@ O ESP32 coleta os dados do acelerômetro **MPU6050 (HW-123)** e envia para a API
 # Informações de contato
 
 ## Autor  
-Desenvolvido por Nathan Rafael Pedroso Lobato.
+Desenvolvido por: 
+
+Nathan Rafael Pedroso Lobato.
 E-mail: nathan.lobato@outlook.com.br
+
+André Vicente Torres Martins
+E-mail: andrasno@gmail.com
