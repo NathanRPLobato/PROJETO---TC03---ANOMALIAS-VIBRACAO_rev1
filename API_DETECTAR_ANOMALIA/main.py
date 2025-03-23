@@ -1,9 +1,11 @@
 import os
 from app import criar_app
 from app.config import Config
+from flasgger import Swagger
 
 # Inicializa a aplicação Flask usando criar_app()
 app = criar_app()
+swagger = Swagger(app)
 
 if __name__ == "__main__":
     porta = Config.PORTA if hasattr(Config, "PORTA") else int(os.getenv("PORTA", 8000))

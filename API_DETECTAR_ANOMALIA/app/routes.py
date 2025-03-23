@@ -8,6 +8,7 @@ from flask_cors import CORS
 from scipy.stats import kurtosis, skew
 from scipy.fft import fft
 import sqlite3
+from flasgger import swag_from
 
 # Função para carregar os modelos
 def carregar_modelos():
@@ -29,6 +30,18 @@ def configurar_rotas(app):
 
 # Rota de home
 @routes.route("/", methods=["GET"])
+@swag_from({
+    'responses': {
+        '200': {
+            'description': 'Página inicial da API',
+            'content': {
+                'application/json': {
+                    'example': {"message": "API de Coleta e Predição de Anomalias"}
+                }
+            }
+        }
+    }
+})
 def home():
     return "API de Coleta e Predição de Anomalias", 200
 
@@ -76,6 +89,57 @@ def coletar_dados():
         return jsonify({"erro": str(e)}), 500
 """
 @routes.route("/collect", methods=["POST"])
+@swag_from({
+    'parameters': [
+        {
+            'name': 'dados',
+            'in': 'body',
+            'type': 'object',
+            'required': True,
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'dados': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'array',
+                            'items': {'type': 'number'}
+                        }
+                    }
+                },
+                'example': {
+                    "dados": [[0.5, 0.7, 0.1], [0.4, 0.6, 0.2]]
+                }
+            }
+        }
+    ],
+    'responses': {
+        '200': {
+            'description': 'Dados coletados e salvos com sucesso',
+            'content': {
+                'application/json': {
+                    'example': {"mensagem": "Dados coletados e salvos com sucesso!"}
+                }
+            }
+        },
+        '400': {
+            'description': 'Dados inválidos ou ausentes',
+            'content': {
+                'application/json': {
+                    'example': {"erro": "Dados inválidos ou ausentes"}
+                }
+            }
+        },
+        '500': {
+            'description': 'Erro interno do servidor',
+            'content': {
+                'application/json': {
+                    'example': {"erro": "Mensagem de erro"}
+                }
+            }
+        }
+    }
+})
 def coletar_dados():
     try:
         dados_recebidos = request.get_json()
@@ -182,6 +246,39 @@ def prever():
 """
 
 @routes.route("/predict", methods=["GET"])
+@swag_from({
+    'responses': {
+        '200': {
+            'description': 'Resultado da previsão usando os modelos KNN e RF',
+            'content': {
+                'application/json': {
+                    'example': {
+                        "amostras_utilizadas": [[0.5, 0.7, 0.1]],
+                        "resultado_knn": [1],
+                        "resultado_rf": [1],
+                        "classificacao": ["falha critica"]
+                    }
+                }
+            }
+        },
+        '400': {
+            'description': 'Nenhum dado encontrado no banco de dados',
+            'content': {
+                'application/json': {
+                    'example': {"erro": "Nenhum dado encontrado no banco de dados_refined.db"}
+                }
+            }
+        },
+        '500': {
+            'description': 'Erro interno do servidor',
+            'content': {
+                'application/json': {
+                    'example': {"erro": "Mensagem de erro"}
+                }
+            }
+        }
+    }
+})
 def prever():
     try:
         # Conectar ao banco de dados dados_refined.db
@@ -299,6 +396,45 @@ def fft():
 """
 
 @routes.route("/fft", methods=["GET"])
+@swag_from({
+    'responses': {
+        '200': {
+            'description': 'Resultado da transformação FFT nos dados de vibração e falhas detectadas',
+            'content': {
+                'application/json': {
+                    'example': {
+                        "fft_dados": {
+                            "x": {"frequencias": [1, 2, 3], "espectro": [0.1, 0.2, 0.3]},
+                            "y": {"frequencias": [4, 5, 6], "espectro": [0.4, 0.5, 0.6]},
+                            "z": {"frequencias": [7, 8, 9], "espectro": [0.7, 0.8, 0.9]}
+                        },
+                        "falhas_detectadas": {
+                            "x": {"pico_frequencia": 2, "tipo_falha": "Desbalanceamento"},
+                            "y": {"pico_frequencia": 5, "tipo_falha": "Desgaste"},
+                            "z": {"pico_frequencia": 8, "tipo_falha": "Falta de lubrificação"}
+                        }
+                    }
+                }
+            }
+        },
+        '400': {
+            'description': 'Erro de dados inválidos ou insuficientes no banco de dados',
+            'content': {
+                'application/json': {
+                    'example': {"erro": "Menos de 80 linhas disponíveis no banco de dados_raw.db"}
+                }
+            }
+        },
+        '500': {
+            'description': 'Erro interno do servidor',
+            'content': {
+                'application/json': {
+                    'example': {"erro": "Mensagem de erro"}
+                }
+            }
+        }
+    }
+})
 def fft():
     try:
         # Conectar ao banco de dados dados_raw.db

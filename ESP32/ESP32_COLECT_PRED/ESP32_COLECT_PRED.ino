@@ -3,12 +3,12 @@
 #include <Wire.h>
 
 // Configuração da rede Wi-Fi
-const char* WIFI_SSID = "Dalney";
-const char* WIFI_PASS = "nathyago0310";
+const char* WIFI_SSID = "SEU_WIFI_AQUI";
+const char* WIFI_PASS = "SUA_SENHA_AQUI";
 
 // URLs da API
-const char* SERVER_URL_PREDICT = "http://192.168.0.106:8000/predict";
-const char* SERVER_URL_COLLECT = "http://192.168.0.106:8000/collect";
+const char* SERVER_URL_PREDICT = "http://192.168.0.XXX:8000/predict"; // Troque o XXX pelo IP do seu servidor
+const char* SERVER_URL_COLLECT = "http://192.168.0.XXX:8000/collect"; // Troque o XXX pelo IP do seu servidor
 
 // Endereço I2C do HW-123
 const int HW123_ADDR = 0x68;

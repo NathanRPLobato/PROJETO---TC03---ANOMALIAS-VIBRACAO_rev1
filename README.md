@@ -9,7 +9,7 @@ Este projeto realiza o monitoramento de anomalias utilizando um **ESP32** com o 
 📂 monitoramento-anomalias
 │── 📂 app                  # API Flask
 │   │── 📜 __init__.py       # Inicializa a aplicação Flask
-│   │── 📜 routes.py         # Rotas da API
+│   │── 📜 routes.py         # Rotas da API e documentação Swagger
 │   │── 📜 funcoesfft.py     # Centraliza todas as funções necessárias para a Transformada de Fourrier ser aplicada
 │   │── 📜 config.py         # Configurações do sistema
 │── 📂 models               # Modelos treinados
@@ -30,7 +30,6 @@ Este projeto realiza o monitoramento de anomalias utilizando um **ESP32** com o 
 │── 📜 main.py              # Arquivo principal da API
 │── 📜 requirements.txt     # Dependências do projeto
 │── 📜 README.md            # Documentação
-│── 📜 swagger.yaml            # Documentação
 📂 esp32_code           # Código para ESP32
 │── 📜 esp32_get_data.ino # Código do ESP32 para captura e envio de dados
 ```
@@ -124,26 +123,50 @@ Resposta:
 
 ## Acessando a Documentação Swagger
 
-A documentação interativa pode ser acessada no Swagger UI utilizando uma ferramenta como [Swagger Editor](https://editor.swagger.io/) ou configurando o Flask-Swagger.
+A documentação interativa da API pode ser acessada através do Swagger UI. Para visualizá-la, você pode usar:
 
-### Testando as Rotas
+- O [Swagger Editor](https://editor.swagger.io/)
+- Uma ferramenta local como `flask-swagger` ou `flasgger`, caso esteja rodando a API localmente.
 
-Utilize ferramentas como Postman ou cURL para fazer chamadas à API:
+Se a API estiver rodando localmente, acesse:
 
-#### Prever anomalias
-```sh
-curl -X POST "http://localhost:8000/predict" -H "Content-Type: application/json" -d '{"dados": [[0.1, -0.2, 9.8]]}'
+```
+http://localhost:8000/apidocs
 ```
 
-#### Coletar dados
+## Testando as Rotas
+
+Você pode testar os endpoints utilizando ferramentas como **Postman**, **cURL** ou diretamente pelo Swagger UI.
+
+### Coletar Dados
+
 ```sh
 curl -X POST "http://localhost:8000/collect" -H "Content-Type: application/json" -d '{"dados": [[0.1, -0.2, 9.8]]}'
 ```
 
-#### Prever usando KNN
+---
+
+### Predição de Anomalias
+
 ```sh
-curl -X POST "http://localhost:8000/predict_knn" -H "Content-Type: application/json" -d '{"dados": [[0.1, -0.2, 9.8]]}'
+curl -X GET "http://localhost:8000/predict" -H "Content-Type: application/json"
 ```
+
+---
+
+### Transformada Rápida de Fourier (FFT)
+
+```sh
+curl -X POST "http://localhost:8000/fft" -H "Content-Type: application/json" -d '{"dados": [[0.1, -0.2, 9.8], [0.2, 0.1, -9.7]]}'
+```
+
+Essa rota retorna os espectros de frequência para os eixos X, Y e Z, além da detecção de possíveis falhas com base nas frequências dominantes.
+
+---
+
+Caso encontre erros, verifique se a API está rodando corretamente e se os dados enviados estão no formato esperado.
+
+
 
 # Necessidades além da API
 
