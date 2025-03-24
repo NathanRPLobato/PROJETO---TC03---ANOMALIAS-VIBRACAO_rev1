@@ -7,8 +7,8 @@ import base64
 app = Flask(__name__)
 
 # URLs das APIs
-API_URL_PREDICTION = "http://192.168.0.106:8000/predict"
-API_URL_FFT = "http://192.168.0.106:8000/fft"
+API_URL_PREDICTION = "http://192.168.0.111:8000/predict" # Alterar para o IP do seu servidor
+API_URL_FFT = "http://192.168.0.111:8000/fft" # Alterar para o IP do seu servidor
 
 def get_data():
     """Função para buscar os dados da API e gerar o gráfico."""
@@ -33,16 +33,18 @@ def get_data():
                 break
 
     # Definir as cores baseadas nos resultados
-    knn_color = "green" if resultado_knn == "operacao normal" else "yellow" if resultado_knn == "falha potencial" else "red"
-    rf_color = "green" if resultado_rf == "operacao normal" else "yellow" if resultado_rf == "falha potencial" else "red"
+    knn_color = "green" if resultado_knn == "operacao normal" else "yellow" if resultado_knn == "falha potencial" else "blue" if resultado_knn == "sensor fora" else "red"
+    rf_color = "green" if resultado_rf == "operacao normal" else "yellow" if resultado_rf == "falha potencial" else "blue" if resultado_rf == "sensor fora" else "red"
 
+    """
     # Nova condição para status "Equipamento Desligado"
     if resultado_knn == "falha potencial" and resultado_rf == "falha potencial" and falha_detectada == "Equipamento Sem falha Evidente":
         knn_color = "blue"
         rf_color = "blue"
         resultado_knn = "Equipamento Desligado"
         resultado_rf = "Equipamento Desligado"
-
+    """
+    
     # Preparar os dados FFT para o gráfico
     frequencias = data_fft.get('fft_dados', {}).get('X', {}).get('frequencias', [])
     espectro_X = data_fft.get('fft_dados', {}).get('X', {}).get('espectro', [])

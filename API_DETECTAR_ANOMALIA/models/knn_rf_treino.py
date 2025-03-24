@@ -44,7 +44,8 @@ folder_path = "API_DETECTAR_ANOMALIA\instance\datasets"
 data_files = {
     "falha_critica.csv": "falha critica",
     "falha_tendencial.csv": "falha potencial",
-    "operacao_normal.csv": "operacao normal"
+    "operacao_normal.csv": "operacao normal",
+    "sensor_fora.csv": "sensor fora"
 }
 
 # Carregar e rotular os dados
