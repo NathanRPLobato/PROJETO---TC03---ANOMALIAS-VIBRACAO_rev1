@@ -4,7 +4,7 @@ from scipy.fft import fft
 # Função para detectar o tipo de falha baseado na frequência
 def detectar_falha(frequencia):
     # Associações de frequências com falhas típicas
-    if 0.2 < frequencia < 10: # Limite inferior de 0.2 Hz para evitar falsos positivos
+    if 0.07 < frequencia < 10: # Limite inferior de 0.07 Hz para evitar falsos positivos
         return "Desbalanceamento"
     elif 10 <= frequencia < 100:
         return "Problema no Rolamento"

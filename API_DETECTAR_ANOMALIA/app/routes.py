@@ -442,13 +442,13 @@ def fft():
         conn = sqlite3.connect(caminho_bd_raw)
         cursor = conn.cursor()
 
-        # Buscar as últimas 80 linhas da tabela dados_raw (ordem por ID automático ou rowid)
-        query = "SELECT * FROM dados_raw ORDER BY rowid DESC LIMIT 80"
+        # Buscar as últimas 60 linhas da tabela dados_raw (ordem por ID automático ou rowid)
+        query = "SELECT * FROM dados_raw ORDER BY rowid DESC LIMIT 60"
         cursor.execute(query)
         ultimas_linhas = cursor.fetchall()
 
         # Verificar se há dados suficientes no banco
-        if not ultimas_linhas or len(ultimas_linhas) < 80:
+        if not ultimas_linhas or len(ultimas_linhas) < 60:
             return jsonify({"erro": "Menos de 80 linhas disponiveis no banco de dados_raw.db"}), 400
 
         # Transformar os dados em um DataFrame para processamento
